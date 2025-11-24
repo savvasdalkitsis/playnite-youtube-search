@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PlayniteSDK" Version="6.13.0" />
+    <PackageReference Include="PlayniteSDK" Version="6.11.0" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <None Include="extension.yaml.template" />
