@@ -1,0 +1,44 @@
+name: Build and Release Playnite Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag -replace "^v", ""
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "Building version: $version"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build and Package
+        run: dotnet build -c Release /p:Version=${{ env.VERSION }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            **/*.pext
+          draft: false
+          prerelease: false
+          generate_release_notes: true
