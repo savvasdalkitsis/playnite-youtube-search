@@ -1,9 +1,13 @@
 name: Build and Release Playnite Extension
 
+# Trigger this workflow only when a tag starting with 'v' is pushed (e.g., v1.0.0)
 on:
   push:
     tags:
       - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -42,3 +46,62 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
+
+      - name: Update installer.yaml
+        shell: pwsh
+        run: |
+          # 1. Config Git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. Switch to main branch to push changes (checkout is currently on the tag)
+          git fetch origin main
+          git checkout main
+          git pull origin main
+
+          # 3. Find the generated .pext file name
+          $pextFile = Get-ChildItem -Path . -Recurse -Filter "*.pext" | Select-Object -First 1
+          if (-not $pextFile) { Write-Error "No .pext file found"; exit 1 }
+          $pextName = $pextFile.Name
+
+          # 4. Determine Playnite SDK Version from csproj (Optional: defaults to a safe value if parsing fails)
+          $sdkVersion = "6.11.0" 
+          try {
+             [xml]$csproj = Get-Content (Get-ChildItem -Filter "*.csproj").FullName
+             $foundSdk = $csproj.Project.ItemGroup.PackageReference | Where-Object { $_.Include -eq "PlayniteSDK" }
+             if ($foundSdk) { $sdkVersion = $foundSdk.Version }
+          } catch {
+             Write-Host "Could not parse SDK version from csproj, using default $sdkVersion"
+          }
+
+          # 5. Construct the new YAML entry
+          $repo = "${{ github.repository }}"
+          $tag = "${{ github.ref_name }}"
+          $date = Get-Date -Format "yyyy-MM-dd"
+          $url = "https://github.com/$repo/releases/download/$tag/$pextName"
+
+          # This block format must match your YAML structure's indentation (2 spaces)
+          $newEntry = @"
+            - Version: ${{ env.VERSION }}
+              RequiredApiVersion: $sdkVersion
+              ReleaseDate: $date
+              PackageUrl: $url
+              Changelog:
+                - Version ${{ env.VERSION }} released via GitHub Actions
+          "@
+
+          # 6. Read and Modify installer.yaml
+          $yamlPath = "installer.yaml"
+          if (Test-Path $yamlPath) {
+              $content = Get-Content $yamlPath -Raw
+              # Regex: Find "Packages:" and insert the new entry immediately after
+              $newContent = $content -replace "Packages:", "Packages:`n$newEntry"
+              Set-Content $yamlPath $newContent
+              
+              # 7. Commit and Push
+              git add $yamlPath
+              git commit -m "Auto-update installer.yaml for version ${{ env.VERSION }}"
+              git push origin main
+          } else {
+              Write-Warning "installer.yaml not found, skipping update."
+          }
