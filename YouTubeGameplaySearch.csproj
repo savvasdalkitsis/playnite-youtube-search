@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>YouTubeGameplaySearch</AssemblyName>
+    <RootNamespace>YouTubeGameplaySearch</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <Version>1.0.0</Version>
+    
+    <PextOutputDir>$(OutputPath)</PextOutputDir>
+    <PextPackageName>YouTubeGameplaySearch.pext</PextPackageName>
+
+    <PlayniteExtensionsDir>$(AppData)\Playnite\Extensions\YouTubeGameplaySearch</PlayniteExtensionsDir>
+
+    <PextStagingDir>$(OutputPath)pext_temp\</PextStagingDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PlayniteSDK" Version="6.13.0" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <None Include="extension.yaml.template" />
+    <None Include="localization\en_US.xaml" />
+    <None Include="icon_32.png" />
+    <None Include="icon_128.png" />
+  </ItemGroup>
+
+  <Target Name="GenerateExtensionYaml" BeforeTargets="Build">
+    <Message Importance="High" Text="Generating extension.yaml with Version=$(Version)" />
+    <ReadLinesFromFile File="extension.yaml.template">
+      <Output TaskParameter="Lines" ItemName="YamlLines" />
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile File="$(OutputPath)extension.yaml" 
+                  Lines="@(YamlLines->Replace('%24(Version)','$(Version)'))" 
+                  Overwrite="true" />
+  </Target>
+
+  <Target Name="CopyPluginToPlaynite" AfterTargets="Build">
+    <MakeDir Directories="$(PlayniteExtensionsDir)" />
+
+    <Copy SourceFiles="$(OutputPath)YouTubeGameplaySearch.dll" DestinationFolder="$(PlayniteExtensionsDir)" />
+    <Copy SourceFiles="$(OutputPath)extension.yaml" DestinationFolder="$(PlayniteExtensionsDir)" />
+    <Copy SourceFiles="icon_32.png" DestinationFolder="$(PlayniteExtensionsDir)" />
+    <Copy SourceFiles="icon_128.png" DestinationFolder="$(PlayniteExtensionsDir)" />
+    <MakeDir Directories="$(PlayniteExtensionsDir)localization" />
+    <Copy SourceFiles="localization\en_US.xaml" DestinationFolder="$(PlayniteExtensionsDir)localization" />
+  </Target>
+
+  <Target Name="CreatePextPackage" AfterTargets="Build">
+
+    <RemoveDir Directories="$(PextStagingDir)" />
+    <MakeDir Directories="$(PextStagingDir)" />
+
+    <Copy SourceFiles="$(OutputPath)YouTubeGameplaySearch.dll" DestinationFolder="$(PextStagingDir)" />
+    <Copy SourceFiles="$(OutputPath)extension.yaml" DestinationFolder="$(PextStagingDir)" />
+    <Copy SourceFiles="icon_32.png" DestinationFolder="$(PextStagingDir)" />
+    <Copy SourceFiles="icon_128.png" DestinationFolder="$(PextStagingDir)" />
+    <MakeDir Directories="$(PextStagingDir)localization" />
+    <Copy SourceFiles="localization\en_US.xaml" DestinationFolder="$(PextStagingDir)localization" />
+
+    <ZipDirectory SourceDirectory="$(PextStagingDir)" DestinationFile="$(PextOutputDir)$(PextPackageName)" Overwrite="true" />
+  </Target>
+
+  <UsingTask TaskName="ZipDirectory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" />
+
+</Project>
