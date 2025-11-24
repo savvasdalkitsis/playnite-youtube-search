@@ -4,6 +4,8 @@ using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace YouTubeGameplaySearch
 {
@@ -35,9 +37,13 @@ namespace YouTubeGameplaySearch
             {
                 desc = "Search YouTube for Gameplay";
             }
+            
+            string pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string iconPath = Path.Combine(pluginFolder, "icon_32.png");
             yield return new GameMenuItem
             {
                 Description = desc,
+                Icon = Path.Combine(pluginFolder, "icon_32.png"), 
                 Action = (actionArgs) =>
                 {
                     foreach (var game in actionArgs.Games)
