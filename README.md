@@ -1,5 +1,3 @@
-User's active file:
-
 ![YouTube Gameplay Search](icon_128.png)
 
 # YouTube Gameplay Search — Playnite Extension
