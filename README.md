@@ -1,8 +1,8 @@
-![YouTube Gameplay Search](icon_128.png)
+![YouTube Search](icon_128.png)
 
-# YouTube Gameplay Search — Playnite Extension
+# YouTube Search — Playnite Extension
 
-YouTube Gameplay Search adds a quick way to find gameplay videos for your games directly from Playnite.
+YouTube Search adds a quick way to find gameplay and trailer videos for your games directly from Playnite.
 
 ![preview](assets/image.png)
 
@@ -12,5 +12,5 @@ YouTube Gameplay Search adds a quick way to find gameplay videos for your games 
 - **Lightweight:** No external service besides YouTube is required.
 
 **Usage**
-- In Playnite, right click a game from the games list (or inside `More` from the game details page) and select the `Search YouTube for gameplay` action 
+- In Playnite, right click a game from the games list (or inside `More` from the game details page) and select the `Search YouTube for gameplay/trailer` actions
 - The extension opens a list of YouTube results matching the game's title.

@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>YouTubeGameplaySearch</AssemblyName>
-    <RootNamespace>YouTubeGameplaySearch</RootNamespace>
+    <AssemblyName>YouTubeSearch</AssemblyName>
+    <RootNamespace>YouTubeSearch</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
     <Version>1.0.0</Version>
     
     <PextOutputDir>$(OutputPath)</PextOutputDir>
-    <PextPackageName>YouTubeGameplaySearch.pext</PextPackageName>
+    <PextPackageName>YouTubeSearch.pext</PextPackageName>
 
-    <PlayniteExtensionsDir>$(AppData)\Playnite\Extensions\YouTubeGameplaySearch</PlayniteExtensionsDir>
+    <PlayniteExtensionsDir>$(AppData)\Playnite\Extensions\YouTubeSearch</PlayniteExtensionsDir>
 
     <PextStagingDir>$(OutputPath)pext_temp\</PextStagingDir>
   </PropertyGroup>
@@ -40,7 +40,7 @@
   <Target Name="CopyPluginToPlaynite" AfterTargets="Build">
     <MakeDir Directories="$(PlayniteExtensionsDir)" />
 
-    <Copy SourceFiles="$(OutputPath)YouTubeGameplaySearch.dll" DestinationFolder="$(PlayniteExtensionsDir)" />
+    <Copy SourceFiles="$(OutputPath)YouTubeSearch.dll" DestinationFolder="$(PlayniteExtensionsDir)" />
     <Copy SourceFiles="$(OutputPath)extension.yaml" DestinationFolder="$(PlayniteExtensionsDir)" />
     <Copy SourceFiles="icon_32.png" DestinationFolder="$(PlayniteExtensionsDir)" />
     <Copy SourceFiles="icon_128.png" DestinationFolder="$(PlayniteExtensionsDir)" />
@@ -53,7 +53,7 @@
     <RemoveDir Directories="$(PextStagingDir)" />
     <MakeDir Directories="$(PextStagingDir)" />
 
-    <Copy SourceFiles="$(OutputPath)YouTubeGameplaySearch.dll" DestinationFolder="$(PextStagingDir)" />
+    <Copy SourceFiles="$(OutputPath)YouTubeSearch.dll" DestinationFolder="$(PextStagingDir)" />
     <Copy SourceFiles="$(OutputPath)extension.yaml" DestinationFolder="$(PextStagingDir)" />
     <Copy SourceFiles="icon_32.png" DestinationFolder="$(PextStagingDir)" />
     <Copy SourceFiles="icon_128.png" DestinationFolder="$(PextStagingDir)" />
