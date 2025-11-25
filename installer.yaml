@@ -1,5 +1,11 @@
 AddonId: "E3C64309-3175-4740-8802-18118001602B"
 Packages:
+  - Version: 1.0.4
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-11-25
+    PackageUrl: https://github.com/savvasdalkitsis/playnite-youtube-search/releases/download/v1.0.4/YouTubeSearch.pext
+    Changelog:
+      - Version 1.0.4 released via GitHub Actions
   - Version: 1.0.3
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2025-11-24
@@ -19,5 +25,6 @@ Packages:
     Changelog:
       - Version 1.0.1 released via GitHub Actions
   # The release process will insert new versions right here
+
 
 
